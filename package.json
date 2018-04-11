@@ -1,6 +1,6 @@
 {
   "name": "gitdirdown",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A git repo download tool, support sub dir.",
   "main": "index.js",
   "scripts": {
