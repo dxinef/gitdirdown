@@ -14,7 +14,7 @@
     "url": ""
   },
   "bin": {
-    "gitdirdown": "./bin/cli.js"
+    "gitdirdown": "bin/cli.js"
   },
   "author": "",
   "license": "ISC",
