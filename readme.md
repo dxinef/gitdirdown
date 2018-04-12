@@ -4,7 +4,7 @@ gitdirdown
 一个用来下载git下文件的小工具。  
 A git repo download tool.
 
-- 支持下载一个git仓库的所有文件 (total project)
+- 支持下载一个git仓库的所有文件 (download total project)
 - 支持下载一个git仓库的某个目录或文件 (specify sub path)
 - 下载时可以指定branch (specify branch)
 - 目前支持github/gitee
