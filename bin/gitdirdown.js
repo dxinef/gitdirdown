@@ -6,30 +6,32 @@ const cmd = require("commander");
 const gitDownload = require("../index");
 const pkg = require("../package.json");
 
-cmd.version(pkg.version, "-v, --version")
-    .usage('gitdirdown <url> [options]')
-    .option("-u, --url <url>", "git项目的url，必填")
-    .option("-s, --save <path>", "下载文件保存的目录，默认为当前目录")
-    .option("-p, --path <path>", "子级目录，默认为空")
-    .option("-b, --branch <branch>", "项目分支，默认为master")
+cmd
+    .usage('<options>')
+    .description("A git repo download tool, support sub dir or file.")
+    .option("-u, --url <url>", "git repository url (项目url，必须)")
+    .option("-p, --path <path>", "git repository sub directory (子目录或文件路径)")
+    .option("-b, --branch <branch>", "git repository branch (项目分支)")
+    .option("-s, --save <path>", "folder for the download file (下载文件保存的文件夹)")
+    .version(pkg.version, "-v, --version")
     .parse(process.argv);
 
 var uri = cmd.url;
-if(!uri)  throw("error: need argument --url");
+if(!uri)  throw("Error: argument --url is necessary");
 
 var u = new (require("url").URL)(uri);
 
 var site = "";
 if(u.host=="github.com") site = "github";
 else if(u.host=="gitee.com") site = "gitee";
-else throw ("error: wrong url.");
+else throw ("Error: wrong url.");
 
 var m = u.pathname.match(/^\/([\w\-\.]+)\/([\w\-\.]+)(\/tree\/([\w\-\.]+)\/([\w\-\.\/]+))?/);
 
-if(!m) throw ("error: wrong url");
+if(!m) throw ("Error: wrong url.");
 
 // gitDownload
-console.log("准备就绪: " + uri);
+console.log("Ready: " + uri);
 
 gitDownload({
     site: site,
@@ -39,7 +41,7 @@ gitDownload({
     path: (cmd.path || m[5] || "").replace(/\/$/, ""),
     save: cmd.save || "",
     onComplete: function() {
-        console.log("任务完成!");
+        console.log("Mission complete!");
     }
 });
 

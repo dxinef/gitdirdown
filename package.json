@@ -1,6 +1,6 @@
 {
   "name": "gitdirdown",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A git repo download tool, support sub dir.",
   "main": "index.js",
   "scripts": {
@@ -11,9 +11,16 @@
     "url": "https://github.com/dxinef/gitdirdown"
   },
   "bin": {
-    "gitdirdown": "bin/cli.js"
+    "gitdirdown": "bin/gitdirdown.js"
   },
   "author": "dxinef",
+  "keywords": [
+    "git",
+    "github",
+    "gitee",
+    "directory",
+    "download"
+  ],
   "license": "MIT",
   "dependencies": {
     "commander": "^2.15.1"
