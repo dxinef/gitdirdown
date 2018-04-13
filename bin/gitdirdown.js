@@ -2,10 +2,12 @@
 
 'use strict';
 
+const URL = require("url").URL; 
 const cmd = require("commander");
 const gitDownload = require("../index");
 const pkg = require("../package.json");
 
+// 命令行参数
 cmd
     .usage('<options>')
     .description("A git repo download tool, support sub dir or file.")
@@ -17,31 +19,44 @@ cmd
     .parse(process.argv);
 
 var uri = cmd.url;
-if(!uri)  throw("Error: argument --url is necessary");
+if(!uri) throw("Error: argument --url is necessary");
 
-var u = new (require("url").URL)(uri);
+// 解析参数的url部分
+var opt = parseUri(uri);
+if(opt.site!="github" && opt.site!="gitee") {
+    throw ("Error: unsupported git host.");
+}
+else if(!opt.owner || !opt.repo) {
+    throw ("Error: wrong url.");
+}
 
-var site = "";
-if(u.host=="github.com") site = "github";
-else if(u.host=="gitee.com") site = "gitee";
-else throw ("Error: wrong url.");
+// 整合命令行参数其他部分
+opt.branch = cmd.branch || opt.branch;
+opt.path = (cmd.path || opt.path).replace(/\/$/, "");
 
-var m = u.pathname.match(/^\/([\w\-\.]+)\/([\w\-\.]+)(\/tree\/([\w\-\.]+)\/([\w\-\.\/]+))?/);
+var reqUrl = `https://${opt.site}.com/${opt.owner}/${opt.repo}/${opt.type}/${opt.branch}` + (opt.path ? "\/" + opt.path : "");
+// 重新解析一次，并encode
+opt = parseUri(new URL(reqUrl).href);
 
-if(!m) throw ("Error: wrong url.");
+opt.save = cmd.save || "";
+opt.onComplete = function() {
+    console.log("Mission complete!");
+}
 
 // gitDownload
-console.log("Ready: " + uri);
+console.log("Ready: " + reqUrl);
+gitDownload(opt);
 
-gitDownload({
-    site: site,
-    owner: m[1],
-    repo: m[2],
-    branch: cmd.branch || m[4] || "",
-    path: (cmd.path || m[5] || "").replace(/\/$/, ""),
-    save: cmd.save || "",
-    onComplete: function() {
-        console.log("Mission complete!");
-    }
-});
-
+// parseUri
+function parseUri(uri) {
+    var m = uri.match(/^https\:\/\/(github|gittee)\.com\/([^\/]+)\/([^\/]+)(\/(tree|blob)\/([^\/]+)(?:\/(.+))?)?(?:\/$|$)/);
+    if(!m) throw ("Error: wrong url.");
+    return {
+        site: m[1],
+        owner: m[2],
+        repo: m[3],
+        type: m[5] || "tree",
+        branch: m[6] || "master",
+        path: m[7] || ""
+    };
+}
