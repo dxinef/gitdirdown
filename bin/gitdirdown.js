@@ -49,7 +49,7 @@ gitDownload(opt);
 
 // parseUri
 function parseUri(uri) {
-    var m = uri.match(/^https\:\/\/(github|gittee)\.com\/([^\/]+)\/([^\/]+)(\/(tree|blob)\/([^\/]+)(?:\/(.+))?)?(?:\/$|$)/);
+    var m = uri.match(/^https\:\/\/(github|gitee)\.com\/([^\/]+)\/([^\/]+)(\/(tree|blob)\/([^\/]+)(?:\/(.+))?)?(?:\/$|$)/);
     if(!m) throw ("Error: wrong url.");
     return {
         site: m[1],
